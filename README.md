@@ -6,7 +6,7 @@ Laporan-Jarkom-Modul-2-IT06-2024
 | Muhammad Harvian Dito Syahputra | 5027221039 |
 
 ## Topologi
-![Topologi]([https://github.com/sylxer/Jarkom-Modul-1-IT06-2024/assets/115382618/648b1b2d-97b8-4ae7-ac45-e8a5dea44c9c](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/topologi.png))
+![Screenshot 2024-04-03 134041](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/topologi.png)
 
 ## Soal 1
 Untuk membantu pertempuran di Erangel, kamu ditugaskan untuk membuat jaringan komputer yang akan digunakan sebagai alat komunikasi. Sesuaikan rancangan Topologi dengan rancangan dan pembagian yang berada di link yang telah disediakan, dengan ketentuan nodenya sebagai berikut :

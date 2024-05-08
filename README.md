@@ -6,7 +6,7 @@ Laporan-Jarkom-Modul-2-IT06-2024
 | Muhammad Harvian Dito Syahputra | 5027221039 |
 
 ## Topologi
-![Screenshot 2024-04-03 134041](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/topologi.png)
+![topologi](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/topologi.png)
 
 ## Soal 1
 Untuk membantu pertempuran di Erangel, kamu ditugaskan untuk membuat jaringan komputer yang akan digunakan sebagai alat komunikasi. Sesuaikan rancangan Topologi dengan rancangan dan pembagian yang berada di link yang telah disediakan, dengan ketentuan nodenya sebagai berikut :
@@ -154,7 +154,7 @@ ping google.com -c 3
 ```
 
 ### Result
-
+![soal1](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/1.png)
 
 ## Soal 2
 Karena para pasukan membutuhkan koordinasi untuk mengambil airdrop, maka buatlah sebuah domain yang mengarah ke Stalber dengan alamat airdrop.xxxx.com dengan alias www.airdrop.xxxx.com dimana xxxx merupakan kode kelompok. Contoh : airdrop.it01.com
@@ -202,6 +202,9 @@ host -t CNAME www.airdrop.it06.com
 ```
 
 ### Result
+![soal2](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/2.1.png)
+![soal2](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/2.2.png)
+![soal2](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/2.3.png)
 
 ## Soal 3
 Para pasukan juga perlu mengetahui mana titik yang sedang di bombardir artileri, sehingga dibutuhkan domain lain yaitu redzone.xxxx.com dengan alias www.redzone.xxxx.com yang mengarah ke Severny
@@ -244,6 +247,9 @@ host -t CNAME www.redzone.it06.com
 ```
 
 ### Result
+![soal3](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/3.1.png)
+![soal3](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/3.2.png)
+![soal3](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/3.3.png)
 
 ## Soal 4
 Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi persenjataan dan suplai tersebut mengarah ke Mylta dan domain yang ingin digunakan adalah loot.xxxx.com dengan alias www.loot.xxxx.com
@@ -286,6 +292,9 @@ host -t CNAME www.loot.it06.com
 ```
 
 ### Result
+![soal4](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/4.1.png)
+![soal4](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/4.2.png)
+![soal4](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/4.3.png)
 
 ## Soal 5
 Pastikan domain-domain tersebut dapat diakses oleh seluruh komputer (client) yang berada di Erangel
@@ -295,6 +304,9 @@ ping -c 3 airdrop.it06.com; ping -c 3 redzone.it06.com; ping -c 3 loot.it06.com
 ```
 
 ### Result
+![soal5](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/5.1.png)
+![soal5](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/5.2.png)
+![soal5](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/5.3.png)
 
 ## Soal 6
 Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses domain secara langsung melalui alamat IP domain tersebut. Karena daerah tersebut tidak diketahui secara spesifik, pastikan semua komputer (client) dapat mengakses domain redzone.xxxx.com melalui alamat IP Severny (Notes : menggunakan pointer record)
@@ -334,6 +346,7 @@ host -t PTR 192.236.4.2
 ```
 
 ### Result
+![soal6](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/6.png)
 
 ## Soal 7
 Akhir-akhir ini seringkali terjadi serangan siber ke DNS Server Utama, sebagai tindakan antisipasi kamu diperintahkan untuk membuat DNS Slave di Georgopol untuk semua domain yang sudah dibuat sebelumnya
@@ -418,6 +431,7 @@ ping -c 3 airdrop.it06.com; ping -c 3 redzone.it06.com; ping -c 3 loot.it06.com
 ```
 
 ### Result
+![soal7](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/7.png)
 
 ## Soal 8
 Kamu juga diperintahkan untuk membuat subdomain khusus melacak airdrop berisi peralatan medis dengan subdomain medkit.airdrop.xxxx.com yang mengarah ke Lipovka
@@ -455,6 +469,7 @@ host -t A medkit.airdrop.it06.com
 ```
 
 ### Result
+![soal8](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/8.png)
 
 ## Soal 9
 Terkadang red zone yang pada umumnya di bombardir artileri akan dijatuhi bom oleh pesawat tempur. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan air raid dan memasukkannya ke subdomain siren.redzone.xxxx.com dalam folder siren dan pastikan dapat diakses secara mudah dengan menambahkan alias www.siren.redzone.xxxx.com dan mendelegasikan subdomain tersebut ke Georgopol dengan alamat IP menuju radar di Severny
@@ -557,6 +572,8 @@ host -t CNAME www.siren.redzone.it06.com
 ```
 
 ### Result
+![soal9](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/9.1.png)
+![soal9](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/9.2.png)
 
 ## Soal 10
 Markas juga meminta catatan kapan saja pesawat tempur tersebut menjatuhkan bom, maka buatlah subdomain baru di subdomain siren yaitu log.siren.redzone.xxxx.com serta aliasnya www.log.siren.redzone.xxxx.com yang juga mengarah ke Severny
@@ -596,6 +613,9 @@ host -t CNAME www.log.siren.redzone.it06.com
 ```
 
 ### Result
+![soal10](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/10.1.png)
+![soal10](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/10.2.png)
+![soal10](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/10.3.png)
 
 ## Soal 11
 

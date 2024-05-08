@@ -211,6 +211,7 @@ host -t CNAME www.airdrop.it06.com
 
 ## Soal 3
 Para pasukan juga perlu mengetahui mana titik yang sedang di bombardir artileri, sehingga dibutuhkan domain lain yaitu redzone.xxxx.com dengan alias www.redzone.xxxx.com yang mengarah ke Severny
+### Script Solution
 ```
 echo 'zone "redzone.it06.com" {
         type master;
@@ -256,6 +257,7 @@ host -t CNAME www.redzone.it06.com
 
 ## Soal 4
 Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi persenjataan dan suplai tersebut mengarah ke Mylta dan domain yang ingin digunakan adalah loot.xxxx.com dengan alias www.loot.xxxx.com
+### Script Solution
 ```
 echo 'zone "loot.it06.com" {
         type master;
@@ -313,6 +315,7 @@ ping -c 3 airdrop.it06.com; ping -c 3 redzone.it06.com; ping -c 3 loot.it06.com
 
 ## Soal 6
 Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses domain secara langsung melalui alamat IP domain tersebut. Karena daerah tersebut tidak diketahui secara spesifik, pastikan semua komputer (client) dapat mengakses domain redzone.xxxx.com melalui alamat IP Severny (Notes : menggunakan pointer record)
+### Script Solution
 ```
 echo 'zone "4.236.192.in-addr.arpa" {
     type master;
@@ -438,6 +441,7 @@ ping -c 3 airdrop.it06.com; ping -c 3 redzone.it06.com; ping -c 3 loot.it06.com
 
 ## Soal 8
 Kamu juga diperintahkan untuk membuat subdomain khusus melacak airdrop berisi peralatan medis dengan subdomain medkit.airdrop.xxxx.com yang mengarah ke Lipovka
+### Script Solution
 ```
 # Define the new content
 new_content=$(cat <<'EOF'
@@ -580,6 +584,7 @@ host -t CNAME www.siren.redzone.it06.com
 
 ## Soal 10
 Markas juga meminta catatan kapan saja pesawat tempur tersebut menjatuhkan bom, maka buatlah subdomain baru di subdomain siren yaitu log.siren.redzone.xxxx.com serta aliasnya www.log.siren.redzone.xxxx.com yang juga mengarah ke Severny
+### Script Solution
 ```
 new_content=$(cat <<'EOF'
 ;

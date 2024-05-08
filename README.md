@@ -5,6 +5,597 @@ Laporan-Jarkom-Modul-2-IT06-2024
 | Sylvia Febrianti | 5027221019 |
 | Muhammad Harvian Dito Syahputra | 5027221039 |
 
+## Topologi
+
+
+## Soal 1
+Untuk membantu pertempuran di Erangel, kamu ditugaskan untuk membuat jaringan komputer yang akan digunakan sebagai alat komunikasi. Sesuaikan rancangan Topologi dengan rancangan dan pembagian yang berada di link yang telah disediakan, dengan ketentuan nodenya sebagai berikut :
+- DNS Master akan diberi nama Pochinki, sesuai dengan kota tempat dibuatnya server tersebut
+- Karena ada kemungkinan musuh akan mencoba menyerang Server Utama, maka buatlah DNS Slave Georgopol yang mengarah ke Pochinki
+- Markas pusat juga meminta dibuatkan tiga Web Server yaitu Severny, Stalber, dan Lipovka. Sedangkan Mylta akan bertindak sebagai Load Balancer untuk server-server tersebut
+
+## Node Configuration
+### Erangel
+```
+auto eth0
+iface eth0 inet dhcp
+
+auto eth1
+iface eth1 inet static
+	address 192.236.1.1
+	netmask 255.255.255.0
+
+auto eth2
+iface eth2 inet static
+	address 192.236.2.1
+	netmask 255.255.255.0
+
+auto eth3
+iface eth3 inet static
+	address 192.236.3.1
+	netmask 255.255.255.0
+
+auto eth4
+iface eth4 inet static
+	address 192.236.4.1
+	netmask 255.255.255.0
+```
+
+### Pochinki 
+```
+auto eth0
+iface eth0 inet static
+	address 192.236.1.2
+	netmask 255.255.255.0
+	gateway 192.236.1.1
+```
+
+### Georgopol
+```
+auto eth0
+iface eth0 inet static
+	address 192.236.3.2
+	netmask 255.255.255.0
+	gateway 192.236.3.1
+```
+
+### Gatka
+```
+auto eth0
+iface eth0 inet static
+	address 192.236.3.3
+	netmask 255.255.255.0
+	gateway 192.236.3.1
+```
+
+### Quarry
+```
+auto eth0
+iface eth0 inet static
+	address 192.236.2.2
+	netmask 255.255.255.0
+	gateway 192.236.2.1
+```
+
+### Shelter
+```
+auto eth0
+iface eth0 inet static
+	address 192.236.2.3
+	netmask 255.255.255.0
+	gateway 192.236.2.1
+```
+
+### Serverny
+```
+auto eth0
+iface eth0 inet static
+	address 192.236.4.2
+	netmask 255.255.255.0
+	gateway 192.236.4.1
+```
+
+### Stalber
+```
+auto eth0
+iface eth0 inet static
+	address 192.236.4.3
+	netmask 255.255.255.0
+	gateway 192.236.4.1
+```
+
+### Lipovka
+```
+auto eth0
+iface eth0 inet static
+	address 192.236.4.4
+	netmask 255.255.255.0
+	gateway 192.236.4.1
+```
+
+### Mylta
+```
+auto eth0
+iface eth0 inet static
+	address 192.236.4.5
+	netmask 255.255.255.0
+	gateway 192.236.4.1
+```
+
+## Install & Setup
+### Erangel
+```
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 192.236.0.0/16
+echo nameserver 192.168.122.1 > /etc/resolv.conf
+```
+
+### DNS Master & Slave (Pocinki & Georgopol)
+```
+echo nameserver 192.168.122.1 > /etc/resolv.conf
+apt-get update
+apt-get install bind9 -y
+```
+
+### gatka, quarry, shelte
+```
+echo '
+nameserver 192.236.1.2 # IP Pochinki
+nameserver 192.236.3.2 # IP Georgopol
+nameserver 192.168.122.1' > /etc/resolv.conf
+
+apt-get update
+apt-get install dnsutils -y
+apt-get install lynx -y
+```
+
+### Testing
+```
+ping google.com -c 3
+```
+
+### Result
+
+
+## Soal 2
+Karena para pasukan membutuhkan koordinasi untuk mengambil airdrop, maka buatlah sebuah domain yang mengarah ke Stalber dengan alamat airdrop.xxxx.com dengan alias www.airdrop.xxxx.com dimana xxxx merupakan kode kelompok. Contoh : airdrop.it01.com
+
+### Script Solution
+```
+echo 'zone "airdrop.it06.com" {
+        type master;
+        file "/etc/bind/jarkom/airdrop.it06.com";
+};' >> /etc/bind/named.conf.local
+
+# Create directory for zone file
+mkdir -p /etc/bind/jarkom
+
+# Copy db.local to the specified directory
+cp /etc/bind/db.local /etc/bind/jarkom/airdrop.it06.com
+
+# Create zone file
+cat << EOF > /etc/bind/jarkom/airdrop.it06.com
+;
+; BIND data file for local loopback interface
+;
+\$TTL    604800
+@       IN      SOA     airdrop.it06.com. root.airdrop.it06.com. (
+                        2024030501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      airdrop.it06.com.
+@       IN      A       192.236.4.3     ; Stalber
+www     IN      CNAME   airdrop.it06.com.
+EOF
+
+# Restart BIND service
+service bind9 restart
+```
+
+### Testing
+```
+ping airdrop.it06.com -c 3
+ping www.airdrop.it06.com -c 3
+host -t CNAME www.airdrop.it06.com
+```
+
+### Result
+
+## Soal 3
+Para pasukan juga perlu mengetahui mana titik yang sedang di bombardir artileri, sehingga dibutuhkan domain lain yaitu redzone.xxxx.com dengan alias www.redzone.xxxx.com yang mengarah ke Severny
+```
+echo 'zone "redzone.it06.com" {
+        type master;
+        file "/etc/bind/jarkom/redzone.it06.com";
+};' >> /etc/bind/named.conf.local
+
+# Copy db.local to the specified directory
+cp /etc/bind/db.local /etc/bind/jarkom/redzone.it06.com
+
+# Create zone file
+cat << EOF > /etc/bind/jarkom/redzone.it06.com
+;
+; BIND data file for local loopback interface
+;
+\$TTL    604800
+@       IN      SOA     redzone.it06.com. root.redzone.it06.com. (
+                        2024030501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      redzone.it06.com.
+@       IN      A       192.236.4.2     ; Serverny #no 6
+www     IN      CNAME   redzone.it06.com.
+EOF
+
+# Restart BIND service
+service bind9 restart
+```
+
+### Testing
+```
+ping redzone.it06.com -c 3
+ping www.redzone.it06.com -c 3
+host -t CNAME www.redzone.it06.com
+```
+
+### Result
+
+## Soal 4
+Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi persenjataan dan suplai tersebut mengarah ke Mylta dan domain yang ingin digunakan adalah loot.xxxx.com dengan alias www.loot.xxxx.com
+```
+echo 'zone "loot.it06.com" {
+        type master;
+        file "/etc/bind/jarkom/loot.it06.com";
+};' >> /etc/bind/named.conf.local
+
+# Copy db.local to the specified directory
+cp /etc/bind/db.local /etc/bind/jarkom/loot.it06.com
+
+# Create zone file
+cat << EOF > /etc/bind/jarkom/loot.it06.com
+;
+; BIND data file for local loopback interface
+;
+\$TTL    604800
+@       IN      SOA     loot.it06.com. root.loot.it06.com. (
+                        2024030501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      loot.it06.com.
+@       IN      A       192.236.4.5     ; Mylta
+www     IN      CNAME   loot.it06.com.
+EOF
+
+# Restart BIND service
+service bind9 restart
+```
+
+### Testing
+```
+ping loot.it06.com -c 3
+ping www.loot.it06.com -c 3
+host -t CNAME www.loot.it06.com
+```
+
+### Result
+
+## Soal 5
+Pastikan domain-domain tersebut dapat diakses oleh seluruh komputer (client) yang berada di Erangel
+### Testing (Gatka,Quarry,Shelter)
+```
+ping -c 3 airdrop.it06.com; ping -c 3 redzone.it06.com; ping -c 3 loot.it06.com
+```
+
+### Result
+
+## Soal 6
+Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses domain secara langsung melalui alamat IP domain tersebut. Karena daerah tersebut tidak diketahui secara spesifik, pastikan semua komputer (client) dapat mengakses domain redzone.xxxx.com melalui alamat IP Severny (Notes : menggunakan pointer record)
+```
+echo 'zone "4.236.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/jarkom/4.236.192.in-addr.arpa";
+};' >> /etc/bind/named.conf.local
+
+# Copy db.local to the specified directory
+cp /etc/bind/db.local /etc/bind/jarkom/4.236.192.in-addr.arpa
+
+# Create reverse zone file
+cat << EOF > /etc/bind/jarkom/4.236.192.in-addr.arpa
+;
+; BIND reverse data file for local loopback interface
+;
+\$TTL    604800
+@       IN      SOA     redzone.it06.com. root.redzone.it06.com. (
+                          2024030501      ; Serial
+                          604800         ; Refresh
+                           86400         ; Retry
+                         2419200         ; Expire
+                          604800 )       ; Negative Cache TTL
+;
+4.236.192.in-addr.arpa.      IN      NS      redzone.it06.com.
+2         IN  PTR redzone.it06.com. ; Byte ke-4 Servery
+EOF
+
+# Restart BIND service
+service bind9 restart
+```
+
+### Testing
+```
+host -t PTR 192.236.4.2
+```
+
+### Result
+
+## Soal 7
+Akhir-akhir ini seringkali terjadi serangan siber ke DNS Server Utama, sebagai tindakan antisipasi kamu diperintahkan untuk membuat DNS Slave di Georgopol untuk semua domain yang sudah dibuat sebelumnya
+### Pochinki
+```
+# Define the new content
+new_content=$(cat <<'EOF'
+zone "airdrop.it06.com" {
+    type master;
+    notify yes;
+    also-notify { 192.236.3.2; }; 
+    allow-transfer { 192.236.3.2; }; 
+    file "/etc/bind/jarkom/airdrop.it06.com";
+};
+
+zone "redzone.it06.com" {
+    type master;
+    notify yes;
+    also-notify { 192.236.3.2; }; 
+    allow-transfer { 192.236.3.2; }; 
+    file "/etc/bind/jarkom/redzone.it06.com";
+};
+
+zone "loot.it06.com" {
+    type master;
+    notify yes;
+    also-notify { 192.236.3.2; }; 
+    allow-transfer { 192.236.3.2; }; 
+    file "/etc/bind/jarkom/loot.it06.com";
+};
+
+zone "4.236.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/jarkom/4.236.192.in-addr.arpa";
+};
+EOF
+)
+
+# Overwrite named.conf.local with the new content
+echo "$new_content" > /etc/bind/named.conf.local
+
+# Restart BIND service to apply changes
+service bind9 restart
+```
+Langkah awal adalah menambahkan nofity, also-notify dan allow-transfer agar memberikan izin kepada IP yang dituju
+
+### Georgopol 
+```
+# Define the new content
+new_content=$(cat <<'EOF'
+zone "airdrop.it06.com" {
+    type slave;
+    masters { 192.236.1.2; };
+    file "/var/lib/bind/airdrop.it06.com";
+};
+
+zone "redzone.it06.com" {
+    type slave;
+    masters { 192.236.1.2; };
+    file "/var/lib/bind/redzone.it06.com";
+};
+
+zone "loot.it06.com" {
+    type slave;
+    masters { 192.236.1.2; };
+    file "/var/lib/bind/loot.it06.com";
+};
+EOF
+)
+
+# Overwrite named.conf.local with the new content
+echo "$new_content" > /etc/bind/named.conf.local
+
+# Restart BIND service to apply changes
+service bind9 restart
+```
+Membuat type slave pada zone dari domain dan mengubah path file
+
+### Testing
+```
+ping -c 3 airdrop.it06.com; ping -c 3 redzone.it06.com; ping -c 3 loot.it06.com
+```
+
+### Result
+
+## Soal 8
+Kamu juga diperintahkan untuk membuat subdomain khusus melacak airdrop berisi peralatan medis dengan subdomain medkit.airdrop.xxxx.com yang mengarah ke Lipovka
+```
+# Define the new content
+new_content=$(cat <<'EOF'
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     airdrop.it06.com. root.airdrop.it06.com. (
+                        2024030501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      airdrop.it06.com.
+@       IN      A       192.236.4.3     ; Stalber
+medkit  IN      A       192.236.4.4     ; Lipovka #nambahin ini subdomain
+www     IN      CNAME   airdrop.it06.com.
+EOF
+)
+
+# Overwrite the file with the new content
+echo "$new_content" > /etc/bind/jarkom/airdrop.it06.com
+
+service bind9 restart
+```
+
+### Testing
+```
+ping medkit.airdrop.it06.com -c 3
+host -t A medkit.airdrop.it06.com
+```
+
+### Result
+
+## Soal 9
+Terkadang red zone yang pada umumnya di bombardir artileri akan dijatuhi bom oleh pesawat tempur. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan air raid dan memasukkannya ke subdomain siren.redzone.xxxx.com dalam folder siren dan pastikan dapat diakses secara mudah dengan menambahkan alias www.siren.redzone.xxxx.com dan mendelegasikan subdomain tersebut ke Georgopol dengan alamat IP menuju radar di Severny
+### Pochinki
+```
+# Update redzone.it06.com zone file
+new_zone_content=$(cat <<EOF
+;
+; BIND data file for local loopback interface
+;
+\$TTL    604800
+@       IN      SOA     redzone.it06.com. root.redzone.it06.com. (
+                        2024030501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      redzone.it06.com.
+@       IN      A       192.236.4.2     ; Serverny
+www     IN      CNAME   redzone.it06.com.
+ns1     IN      A       192.236.3.2     ; IP Georgopol #nambah ini
+siren   IN      NS      ns1 #nambah ini
+EOF
+)
+
+echo "$new_zone_content" > /etc/bind/jarkom/redzone.it06.com
+
+# Update named.conf.options #nambah ini
+new_options_content=$(cat <<EOF
+options {
+    directory "/var/cache/bind";
+
+    allow-query { any; };
+    auth-nxdomain no;
+    listen-on-v6 { any; };
+};
+EOF
+)
+
+echo "$new_options_content" > /etc/bind/named.conf.options
+
+# Restart BIND service
+service bind9 restart
+```
+
+### Georgopol
+```
+# Set up zone configuration
+echo 'zone "siren.redzone.it06.com" {
+        type master;
+        file "/etc/bind/siren/siren.redzone.it06.com";
+};' >> /etc/bind/named.conf.local
+
+# Create directory for zone file
+mkdir -p /etc/bind/siren
+
+# Copy db.local to the specified directory
+cp /etc/bind/db.local /etc/bind/siren/siren.redzone.it06.com
+
+# Create zone file
+cat << EOF > /etc/bind/siren/siren.redzone.it06.com
+;
+; BIND data file for local loopback interface
+;
+\$TTL    604800
+@       IN      SOA     siren.redzone.it06.com. siren.redzone.it06.com. (
+                        2024030501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      siren.redzone.it06.com.
+@       IN      A       192.236.4.2     ; Serverny
+www     IN      CNAME   siren.redzone.it06.com.
+EOF
+
+# Update named.conf.options
+new_options_content=$(cat <<EOF
+options {
+    directory "/var/cache/bind";
+
+    allow-query { any; };
+    auth-nxdomain no;
+    listen-on-v6 { any; };
+};
+EOF
+)
+
+# Restart BIND service
+service bind9 restart
+```
+
+### Testing
+```
+ping siren.redzone.it06.com -c 3
+ping www.siren.redzone.it06.com -c 3
+host -t CNAME www.siren.redzone.it06.com
+```
+
+### Result
+
+## Soal 10
+Markas juga meminta catatan kapan saja pesawat tempur tersebut menjatuhkan bom, maka buatlah subdomain baru di subdomain siren yaitu log.siren.redzone.xxxx.com serta aliasnya www.log.siren.redzone.xxxx.com yang juga mengarah ke Severny
+```
+new_content=$(cat <<'EOF'
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     siren.redzone.it06.com. siren.redzone.it06.com. (
+                        2024030501      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      siren.redzone.it06.com.
+@       IN      A       192.236.4.2     ; Serverny
+www     IN      CNAME   siren.redzone.it06.com.
+log     IN      A       192.236.4.2     ; Serverny #nambah ini
+www.log IN      CNAME   log #nambah ini
+EOF
+)
+
+# Simpan konten ke file yang dituju
+echo "$new_content" > /etc/bind/siren/siren.redzone.it06.com
+
+# Restart BIND service untuk menerapkan perubahan
+service bind9 restart
+```
+
+### Testing
+```
+ping log.siren.redzone.it06.com -c 3
+ping www.log.siren.redzone.it06.com -c 3
+host -t CNAME www.log.siren.redzone.it06.com
+```
+
+### Result
 
 ## Soal 11
 

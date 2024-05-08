@@ -1,0 +1,11 @@
+options {
+    directory "/var/cache/bind";
+
+    forwarders {
+        192.168.122.1; // IP Erangel
+    };
+
+    allow-query { any; };
+    auth-nxdomain no;
+    listen-on-v6 { any; };
+};

@@ -1,0 +1,30 @@
+upstream myweb  {
+        server 192.236.4.2:80; #IP Severny
+        server 192.236.4.3:80; #IP Stalber
+        server 192.236.4.4:80; #IP Lipovka
+}
+
+server {
+        listen 14000;
+        server_name mylta.it06.com www.mylta.it06.com;
+
+        location / {
+          proxy_pass http://myweb;
+        }
+}
+
+server {
+        listen 14400;
+        server_name mylta.it06.com www.mylta.it06.com;
+
+        location / {
+          proxy_pass http://myweb;
+        }
+}
+
+server {
+    listen 80;
+    server_name mylta.it06.com www.mylta.it06.com;
+
+    return 404;
+}

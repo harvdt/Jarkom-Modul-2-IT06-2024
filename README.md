@@ -150,7 +150,6 @@ apt-get update
 apt-get install dnsutils -y
 apt-get install lynx -y
 ```
-Setelah membuat Topologi Node dan konfigurasi Node dengan menggunakan GNS3, langkah selanjutnya yaitu melakukan setup pada Node router dan juga pada Node client.
 
 ### Testing
 ```

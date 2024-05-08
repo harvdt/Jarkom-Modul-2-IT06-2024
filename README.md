@@ -625,8 +625,18 @@ host -t CNAME www.log.siren.redzone.it06.com
 - ![soal10](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/10.2.png)
 - ![soal10](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/10.3.png)
 
-## Soal 11
+Dari hasil testing apache benchmark, dapat dilihat bahwa terdapat perbedaan yang cukup jauh antara Request per Second Apache dan Nginx dengan menggunakan round robin. Faktor-faktor yang dapat mempengaruhi hasil ini yaitu penggunaan web server dan algoritma yang digunakan. Kemungkinan penggunaan round robin yang lebih optimal pada apache dapat mempengaruhi request per second-nya menjadi lebih tinggi. Diperlukan uji coba lebih lanjut untuk setiap algoritma untuk mengetahui apakah analisis tersebut valid atau tidak.
 
+Laporan-Jarkom-Modul-2-IT06-2024
+
+| Nama | NRP |
+| ----------- | ----------- |
+| Sylvia Febrianti | 5027221019 |
+| Muhammad Harvian Dito Syahputra | 5027221039 |
+
+
+## Soal 11
+<hr>
 Setelah pertempuran mereda, warga Erangel dapat kembali mengakses jaringan luar, tetapi hanya warga Pochinki saja yang dapat mengakses jaringan luar secara langsung. Buatlah konfigurasi agar warga Erangel yang berada diluar Pochinki dapat mengakses jaringan luar melalui DNS Server Pochinki
 
 ### Pochinki 
@@ -658,7 +668,7 @@ echo "Configuration Complete"
 
 ### Testing 
 Menjalankan ping dengan IP Pochinki di /etc/resolv.conf.
-// ss testing
+![Screenshot 2024-05-04 105509](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/a1d80220-ba5a-47c0-b6ab-ca64ea5bd79a)
 
 ## Soal 12
 
@@ -696,7 +706,7 @@ service apache2 restart
 
 ### Testing
 Melakukan lynx http://192.236.4.2/index.php (IP severny)
-// ss testing
+![Screenshot 2024-05-04 195445](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/44b0ec83-2188-4d6e-9f22-3060c997b72f)
 
 ## Soal 13
 
@@ -739,8 +749,8 @@ Melakukan lynx ke masing-masing IP
 lynx 192.236.4.3/index.php (IP Stalber)
 lynx 192.236.4.4/index.php (IP Lipovka)
 
-// ss testing stalber
-// ss testing lipovka
+![Screenshot 2024-05-08 174938](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/e9e187a8-7c1f-4352-b5ed-d94624b2457b)
+![Screenshot 2024-05-08 174922](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/e5284e67-16ea-49b5-b70f-d71b7c421d6c)
 
 ## Soal 14
 
@@ -841,7 +851,9 @@ lynx 192.236.4.3 (IP Stalber)
 lynx 192.236.4.4 (IP Lipovka)
 lynx 192.236.4.5 (IP Mylta)
 
-// ss masing-masing testing
+![Screenshot 2024-05-04 195445](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/44b0ec83-2188-4d6e-9f22-3060c997b72f)
+![Screenshot 2024-05-08 174938](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/e9e187a8-7c1f-4352-b5ed-d94624b2457b)
+![Screenshot 2024-05-08 174922](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/e5284e67-16ea-49b5-b70f-d71b7c421d6c)
 
 ## Soal 15
 
@@ -853,7 +865,10 @@ Markas pusat meminta laporan hasil benchmark dengan menggunakan apache benchmark
 
 ###  Testing
 Menjalankan apache benchmark dengan menggunakan 2 web server yang berda. Didapatkan hasil seperti berikut
-// hasil analisis
+![grafik](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/b298d545-9a47-4bff-8c59-0c239c94d64e)
+
+Dari hasil testing apache benchmark, dapat dilihat bahwa terdapat perbedaan yang cukup jauh antara Request per Second Apache dan Nginx dengan menggunakan round robin. Faktor-faktor yang dapat mempengaruhi hasil ini yaitu penggunaan web server dan algoritma yang digunakan. Kemungkinan penggunaan round robin yang lebih optimal pada apache dapat mempengaruhi request per second-nya menjadi lebih tinggi. Diperlukan uji coba lebih lanjut untuk setiap algoritma untuk mengetahui apakah analisis tersebut valid atau tidak.
+
 
 ## Soal 16
 
@@ -886,9 +901,10 @@ service bind9 restart
 ```
 
 ### Testing
-Melakukan ping terhadap mylta.it06.com dan www.mylta.it06.com serta melakukan lynx mylta.it06.com dan lynx mylta.it06.com
+Melakukan ping terhadap mylta.it06.com dan www.mylta.it06.com serta melakukan lynx mylta.it06.com dan lynx www.mylta.it06.com
 
-// Hasil testing
+![Screenshot 2024-05-08 181511](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/98ec31b0-42dd-4f0e-b942-be60ab544d29)
+![Screenshot 2024-05-04 195445](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/44b0ec83-2188-4d6e-9f22-3060c997b72f)
 
 ## Soal 17
 
@@ -944,7 +960,7 @@ service nginx restart
 ### Testing
 Dilakukan akses ke masing-masing port dengan lynx mylta.it06.com:14000 dan lynx mylta.it06.com:14400
 
-// Hasil testing
+![Screenshot 2024-05-08 174938](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/e9e187a8-7c1f-4352-b5ed-d94624b2457b)
 
 ## Soal 18
 
@@ -975,14 +991,14 @@ $TTL    604800
 
 service bind9 restart
 
-ech0 'Configuration Complete'
+echo 'Configuration Complete'
 ```
 
 ### Testing
 
-Dilakukan akses langsung dengan menggunakan IP
+Dilakukan akses langsung dengan menggunakan IP Mylta, lynx 192.236.4.5
 
-// hasil testing
+![Screenshot 2024-05-08 174922](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/e5284e67-16ea-49b5-b70f-d71b7c421d6c)
 
 ## Soal 19
 
@@ -1047,7 +1063,7 @@ nginx -t
 ### Testing
 Dilakukan lynx 192.236.4.2/worker2 (IP Severny yang mengarah ke directory worker2)
 
-// ss hasil testing
+![Screenshot 2024-05-04 233835](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/3f29145c-b8e4-4aa2-8284-c5a6f05945e8)
 
 ## Soal 20
 
@@ -1084,4 +1100,4 @@ echo 'Configuration Complete'
 ### Testing
 Dilakukan lynx mylta.it06.com/worker2 dan lynx www.mylta.it06.com/worker2
 
-// hasil testing
+![Screenshot 2024-05-04 233835](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/assets/115382618/3f29145c-b8e4-4aa2-8284-c5a6f05945e8)

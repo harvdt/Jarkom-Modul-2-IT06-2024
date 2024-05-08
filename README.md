@@ -150,6 +150,7 @@ apt-get update
 apt-get install dnsutils -y
 apt-get install lynx -y
 ```
+Setelah membuat Topologi Node dan konfigurasi Node dengan menggunakan GNS3, langkah selanjutnya yaitu melakukan setup pada Node router dan juga pada Node client.
 
 ### Testing
 ```
@@ -162,6 +163,7 @@ ping google.com -c 3
 ## Soal 2
 Karena para pasukan membutuhkan koordinasi untuk mengambil airdrop, maka buatlah sebuah domain yang mengarah ke Stalber dengan alamat airdrop.xxxx.com dengan alias www.airdrop.xxxx.com dimana xxxx merupakan kode kelompok. Contoh : airdrop.it01.com
 
+Dilakukan setup terlebih dahulu pada (DNS Master). Setelah itu dilanjut dengan pembuatan domain yang tertera pada script berikut.
 ### Script Solution
 ```
 echo 'zone "airdrop.it06.com" {
@@ -196,6 +198,8 @@ EOF
 # Restart BIND service
 service bind9 restart
 ```
+Setelah itu melakukan setup menambahkan nameserver IP Node Pochinki dalam file /etc/resolv.conf pada Node Client
+Dan setelah itu dapat dibuktikan dengan melakukan Ping dan host melalui CNAME pada domain yang telah dibuat
 
 ### Testing
 ```
@@ -211,6 +215,8 @@ host -t CNAME www.airdrop.it06.com
 
 ## Soal 3
 Para pasukan juga perlu mengetahui mana titik yang sedang di bombardir artileri, sehingga dibutuhkan domain lain yaitu redzone.xxxx.com dengan alias www.redzone.xxxx.com yang mengarah ke Severny
+
+Langkah-langkah implementasi yang dilakukan sama seperti Question 2, perbedaannya hanya terletak pada nama domain
 ### Script Solution
 ```
 echo 'zone "redzone.it06.com" {
@@ -242,7 +248,7 @@ EOF
 # Restart BIND service
 service bind9 restart
 ```
-
+Setelah itu, dikarenakan nameserver masih menggunakan IP Node Pochinki maka langkah selanjutnya yaitu langsung dibuktikan dengan melakukan Ping dan host melalui CNAME pada domain
 ### Testing
 ```
 ping redzone.it06.com -c 3
@@ -257,6 +263,8 @@ host -t CNAME www.redzone.it06.com
 
 ## Soal 4
 Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi persenjataan dan suplai tersebut mengarah ke Mylta dan domain yang ingin digunakan adalah loot.xxxx.com dengan alias www.loot.xxxx.com
+
+Langkah-langkah implementasi yang dilakukan sama seperti Question 2&3, perbedaannya hanya terletak pada nama domain
 ### Script Solution
 ```
 echo 'zone "loot.it06.com" {
@@ -288,7 +296,7 @@ EOF
 # Restart BIND service
 service bind9 restart
 ```
-
+Setelah itu, dikarenakan nameserver masih menggunakan IP Node Pochinki maka langkah selanjutnya yaitu langsung dibuktikan dengan melakukan Ping dan host melalui CNAME pada domain
 ### Testing
 ```
 ping loot.it06.com -c 3
@@ -315,6 +323,7 @@ ping -c 3 airdrop.it06.com; ping -c 3 redzone.it06.com; ping -c 3 loot.it06.com
 
 ## Soal 6
 Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses domain secara langsung melalui alamat IP domain tersebut. Karena daerah tersebut tidak diketahui secara spesifik, pastikan semua komputer (client) dapat mengakses domain redzone.xxxx.com melalui alamat IP Severny (Notes : menggunakan pointer record)
+
 ### Script Solution
 ```
 echo 'zone "4.236.192.in-addr.arpa" {
@@ -345,6 +354,7 @@ EOF
 # Restart BIND service
 service bind9 restart
 ```
+Menambahkan pengaturan untuk zona "4.236.192.in-addr.arpa" ke file konfigurasi lokal BIND (/etc/bind/named.conf.local). Kemudian, ia menyalin file db.local menjadi file untuk zona reverse yang baru dibuat (/etc/bind/jarkom/4.236.192.in-addr.arpa). Selanjutnya, skrip membuat file zona reverse itu sendiri dengan informasi SOA (Start of Authority) dan PTR (Pointer) records yang menghubungkan alamat IP dengan nama domain. Akhirnya, skrip merestart layanan BIND agar perubahan konfigurasi dapat diterapkan.
 
 ### Testing
 ```
@@ -356,7 +366,9 @@ host -t PTR 192.236.4.2
 
 ## Soal 7
 Akhir-akhir ini seringkali terjadi serangan siber ke DNS Server Utama, sebagai tindakan antisipasi kamu diperintahkan untuk membuat DNS Slave di Georgopol untuk semua domain yang sudah dibuat sebelumnya
+
 ### Pochinki
+Langkah awal adalah menambahkan nofity, also-notify dan allow-transfer agar memberikan izin kepada IP yang dituju
 ```
 # Define the new content
 new_content=$(cat <<'EOF'
@@ -397,9 +409,9 @@ echo "$new_content" > /etc/bind/named.conf.local
 # Restart BIND service to apply changes
 service bind9 restart
 ```
-Langkah awal adalah menambahkan nofity, also-notify dan allow-transfer agar memberikan izin kepada IP yang dituju
 
 ### Georgopol 
+Membuat type slave pada zone dari domain dan mengubah path file
 ```
 # Define the new content
 new_content=$(cat <<'EOF'
@@ -442,6 +454,7 @@ ping -c 3 airdrop.it06.com; ping -c 3 redzone.it06.com; ping -c 3 loot.it06.com
 ## Soal 8
 Kamu juga diperintahkan untuk membuat subdomain khusus melacak airdrop berisi peralatan medis dengan subdomain medkit.airdrop.xxxx.com yang mengarah ke Lipovka
 ### Script Solution
+membuat subdomain medkit.airdrop.xxxx.com yang mengarah ke Lipovka
 ```
 # Define the new content
 new_content=$(cat <<'EOF'
@@ -481,6 +494,8 @@ host -t A medkit.airdrop.it06.com
 ## Soal 9
 Terkadang red zone yang pada umumnya di bombardir artileri akan dijatuhi bom oleh pesawat tempur. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan air raid dan memasukkannya ke subdomain siren.redzone.xxxx.com dalam folder siren dan pastikan dapat diakses secara mudah dengan menambahkan alias www.siren.redzone.xxxx.com dan mendelegasikan subdomain tersebut ke Georgopol dengan alamat IP menuju radar di Severny
 ### Pochinki
+Dalam membuat Delegasi subdomain, diperlukan beberapa configurasi pada DNS Master dan DNS Slave. Kita juga memerlukan bantuan allow-query { any; }; pada `DNS Master dan Slave. Serta kita memerlukan NS karena NS digunakan untuk delegasi zona DNS untuk menggunakan authoritative name server yang diberikan.
+Perlu menambahkan ns1     IN      A       192.236.3.2     ; IP Georgopol agar mendapatkan authoritative terhadap Georgopol. Kita juga perlu mengaktifkan allow-query { any; }; pada DNS Master. Dan juga perlu untuk mengedit /etc/bind/named.conf.local
 ```
 # Update redzone.it06.com zone file
 new_zone_content=$(cat <<EOF
@@ -498,7 +513,7 @@ new_zone_content=$(cat <<EOF
 @       IN      NS      redzone.it06.com.
 @       IN      A       192.236.4.2     ; Serverny
 www     IN      CNAME   redzone.it06.com.
-ns1     IN      A       192.236.3.2     ; IP Georgopol #nambah ini
+ns1     IN      A       192.236.3.2     ; IP Georgopol 
 siren   IN      NS      ns1 #nambah ini
 EOF
 )
@@ -524,6 +539,7 @@ service bind9 restart
 ```
 
 ### Georgopol
+Dan juga perlu setup juga pada Node Georgopol untuk mengarahkan zone ke DNS Master agar authoritative tadi dapat jalan. Kita juga perlu mengaktifkan allow-query { any; }; pada DNS Slave
 ```
 # Set up zone configuration
 echo 'zone "siren.redzone.it06.com" {
@@ -585,6 +601,8 @@ host -t CNAME www.siren.redzone.it06.com
 ## Soal 10
 Markas juga meminta catatan kapan saja pesawat tempur tersebut menjatuhkan bom, maka buatlah subdomain baru di subdomain siren yaitu log.siren.redzone.xxxx.com serta aliasnya www.log.siren.redzone.xxxx.com yang juga mengarah ke Severny
 ### Script Solution
+Dikarenakan sebelumnya telah melakukan delegasi terhadap DNS Slave dan sekarang diberi perintah untuk melakukan subdomain terhadap delegasi domain tadi.
+Langkah yang dilakukan yaitu perlu untuk melakukan penambahan pada Georgopol / DNS Slave sebagai berikut
 ```
 new_content=$(cat <<'EOF'
 ;
@@ -612,7 +630,7 @@ echo "$new_content" > /etc/bind/siren/siren.redzone.it06.com
 # Restart BIND service untuk menerapkan perubahan
 service bind9 restart
 ```
-
+Setelah berhasil ditambahkan dan restart bind9, untuk melakukan testing cukup dengan melakukan ping log.siren.redzone.it06.com atau ping www.log.siren.redzone.it06.com dan juga Alias dapat dilihat dengan menjalankan CNAME
 ### Testing
 ```
 ping log.siren.redzone.it06.com -c 3
@@ -624,16 +642,6 @@ host -t CNAME www.log.siren.redzone.it06.com
 - ![soal10](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/10.1.png)
 - ![soal10](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/10.2.png)
 - ![soal10](https://github.com/harvdt/Jarkom-Modul-2-IT06-2024/blob/main/image/10.3.png)
-
-Dari hasil testing apache benchmark, dapat dilihat bahwa terdapat perbedaan yang cukup jauh antara Request per Second Apache dan Nginx dengan menggunakan round robin. Faktor-faktor yang dapat mempengaruhi hasil ini yaitu penggunaan web server dan algoritma yang digunakan. Kemungkinan penggunaan round robin yang lebih optimal pada apache dapat mempengaruhi request per second-nya menjadi lebih tinggi. Diperlukan uji coba lebih lanjut untuk setiap algoritma untuk mengetahui apakah analisis tersebut valid atau tidak.
-
-Laporan-Jarkom-Modul-2-IT06-2024
-
-| Nama | NRP |
-| ----------- | ----------- |
-| Sylvia Febrianti | 5027221019 |
-| Muhammad Harvian Dito Syahputra | 5027221039 |
-
 
 ## Soal 11
 <hr>
